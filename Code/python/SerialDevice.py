@@ -138,8 +138,9 @@ def yesno_confirm(message) -> bool:
     return confirm_choice == 'y'
 
 
-dev = SerialDevice()
-while True:
-    line = dev.read()
-    if len(line) > 0:
-        print(line, end='')
+if __name__ == '__main__':
+    dev = SerialDevice()
+    while True:
+        line = dev.read()
+        if len(line) > 0:
+            print(line, end='')
