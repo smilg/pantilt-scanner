@@ -118,6 +118,9 @@ class SerialDevice:
             self.log_file.write(line.rstrip()+'\n')
         return line
 
+    def write(self, string) -> None:
+        self.ser.write('{}\r'.format(string).encode())
+
 
 def print_port_info(port: ListPortInfo) -> None:
     print('\tname: {}'.format(port.name))
