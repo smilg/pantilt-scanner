@@ -4,6 +4,7 @@
 #define TILT_PIN 6
 #define SENSOR_PIN A0
 
+#define SERVO_CENTER 85
 #define SENSOR_SAMPLES 3
 
 Servo pan_servo;
@@ -18,12 +19,12 @@ void setup() {
     Serial.begin(115200);
     pan_servo.attach(PAN_PIN);
     tilt_servo.attach(TILT_PIN);
-    pan_servo.write(90);
-    pan_deg = 90;
-    delay(90*20);
-    tilt_servo.write(90);
-    tilt_deg = 90;
-    delay(90*20);
+    pan_servo.write(SERVO_CENTER);
+    pan_deg = SERVO_CENTER;
+    delay(SERVO_CENTER*20);
+    tilt_servo.write(SERVO_CENTER);
+    tilt_deg = SERVO_CENTER;
+    delay(SERVO_CENTER*20);
 }
 
 void loop() {
