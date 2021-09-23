@@ -58,6 +58,8 @@ void parse_command() {
         int new_deg = arg.toInt();
         move_servo(tilt_servo, new_deg, abs(tilt_deg-new_deg)*20);
         tilt_deg = new_deg;
+    } else {
+        Serial.println("unknown command!");
     }
     Serial.println("ready");
 }
