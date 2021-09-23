@@ -16,13 +16,12 @@ class SerialDevice:
                     (0x2A03, 0x0043), (0x2341, 0x0243),
                     (0x0403, 0x6001), (0x1A86, 0x7523))
 
-    def __init__(self, port = None, baud = 115200, log_name = 'log.txt') -> None:
+    def __init__(self, port = None, baud = 115200) -> None:
         self.ser = serial.Serial(timeout = 1)
         self.connected = False
         self.port = port
         self.baud = self.confirm_baud(baud)
         self.ser.baudrate = self.baud
-        self.log_file = open(log_name, 'a+')
 
         # try to autoselect a port if no port was specified
         if not port:
@@ -41,7 +40,6 @@ class SerialDevice:
     
     def __del__(self) -> None:
         self.ser.close()
-        self.log_file.close()
 
     def autodetect_ports(self) -> list:
         ports = list_ports.comports()
@@ -114,8 +112,8 @@ class SerialDevice:
 
     def read(self) -> str:
         line = self.ser.readline().decode()
-        if len(line) > 0:
-            self.log_file.write(line.rstrip()+'\n')
+        # if len(line) > 0:
+        #     self.log_file.write(line.rstrip()+'\n')
         return line
 
     def write(self, string) -> None:
