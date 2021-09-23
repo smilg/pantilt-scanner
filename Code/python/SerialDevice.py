@@ -87,7 +87,6 @@ class SerialDevice:
         
         if yesno_confirm('would you like to change it?'):
             baud_choice = ''
-            confirmed = False
             while True:
                 baud_choice = input('enter a new baud rate: ').strip()
                 if not baud_choice.isnumeric():
@@ -112,8 +111,6 @@ class SerialDevice:
 
     def read(self) -> str:
         line = self.ser.readline().decode()
-        # if len(line) > 0:
-        #     self.log_file.write(line.rstrip()+'\n')
         return line
 
     def write(self, string) -> None:
