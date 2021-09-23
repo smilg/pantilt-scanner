@@ -20,10 +20,8 @@ void setup() {
     Serial.begin(115200);
     pan_servo.attach(PAN_PIN);
     tilt_servo.attach(TILT_PIN);
-    move_servo(pan_servo, SERVO_CENTER, SERVO_CENTER*MSEC_PER_DEG);
-    move_servo(tilt_servo, SERVO_CENTER, SERVO_CENTER*MSEC_PER_DEG);
-    tilt_deg = SERVO_CENTER;
-    pan_deg = SERVO_CENTER;
+    pan_deg = 0;
+    tilt_deg = 0;
     Serial.println("ready");
 }
 
