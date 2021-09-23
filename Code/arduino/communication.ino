@@ -46,7 +46,9 @@ void parse_command() {
         for(int i = 0; i < SENSOR_SAMPLES; i++) {
             readings[i] = analogRead(SENSOR_PIN);
         }
-        Serial.println(arr_min(readings, SENSOR_SAMPLES));
+        Serial.print("X");Serial.println(pan_deg);
+        Serial.print("Y");Serial.println(tilt_deg);
+        Serial.print("Z");Serial.println(arr_min(readings, SENSOR_SAMPLES));
     } else if (command.startsWith("PAN|")) {
         String arg = command.substring(4);
         arg.trim();
