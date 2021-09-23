@@ -4,6 +4,8 @@
 #define TILT_PIN 6
 #define SENSOR_PIN A0
 
+#define SENSOR_SAMPLES 3
+
 Servo pan_servo;
 Servo tilt_servo; 
 
@@ -39,7 +41,11 @@ void loop() {
 
 void parse_command() {
     if (command.equals("READSENSOR")) {
-        Serial.println(analogRead(SENSOR_PIN));
+        int readings[SENSOR_SAMPLES];
+        for(int i = 0; i < SENSOR_SAMPLES; i++) {
+            readings[i] = analogRead(SENSOR_PIN);
+        }
+        Serial.println(arr_min(readings, SENSOR_SAMPLES));
     } else if (command.startsWith("PAN|")) {
         String arg = command.substring(4);
         arg.trim();
@@ -59,4 +65,12 @@ void parse_command() {
 void move_servo(Servo serv, long angle, int wait) {
     serv.write(angle);
     delay(wait);
+}
+
+int arr_min(int arr[], int len) {
+    int res = arr[0];
+    for(int i = 1; i < len; ++i) {
+        res = min(res, arr[i]);
+    }
+    return res;
 }
