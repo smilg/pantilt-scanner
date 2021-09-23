@@ -110,11 +110,14 @@ class SerialDevice:
             return baud
 
     def read(self) -> str:
-        line = self.ser.readline().decode()
+        line = ''
+        if self.connected:
+            line = self.ser.readline().decode()
         return line
 
     def write(self, string) -> None:
-        self.ser.write('{}\r'.format(string).encode())
+        if self.connected:
+            self.ser.write('{}\r'.format(string).encode())
 
 
 def print_port_info(port: ListPortInfo) -> None:
