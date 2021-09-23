@@ -59,6 +59,10 @@ void parse_command() {
         int new_deg = arg.toInt();
         move_servo(tilt_servo, new_deg, abs(tilt_deg-new_deg)*MSEC_PER_DEG);
         tilt_deg = new_deg;
+    } else if (command.startsWith("DELAY|")) {
+        String arg = command.substring(6);
+        arg.trim();
+        delay(arg.toInt());
     } else {
         Serial.println("unknown command!");
     }

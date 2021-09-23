@@ -33,6 +33,19 @@ class Scanner:
                 data.append(line)
         return data
 
+    def delay(self, time: int) -> None:
+        '''
+        Instructs the scanner to wait for a specific amount of time, then waits for a ready signal.
+        
+        Intended to be used to mitigate the scanner shaking and messing up the readings.
+
+        Args:
+            time (int): The amount of time to wait in milliseconds.
+        '''
+        self.dev.write('DELAY|{}'.format(time))
+        self._ready = False
+        self._read_until_ready()
+
     def pan(self, angle: int) -> None:
         '''
         Instructs the scanner to pan to an angle, then waits for a ready signal.
@@ -42,7 +55,7 @@ class Scanner:
         '''
         # don't send a command if the angle is invalid
         if angle >= 0 and angle <= self.max_angle:
-            self.dev.write("PAN|{}".format(angle))
+            self.dev.write('PAN|{}'.format(angle))
             self._ready = False
             self.pan_angle = angle      # keep track of the new angle
             self._read_until_ready()
@@ -56,7 +69,7 @@ class Scanner:
         '''
         # don't send a command if the angle is invalid
         if angle >= 0 and angle <= self.max_angle:
-            self.dev.write("TILT|{}".format(angle))
+            self.dev.write('TILT|{}'.format(angle))
             self._ready = False
             self.tilt_angle = angle     # keep track of the new angle
             self._read_until_ready()
@@ -75,7 +88,7 @@ class Scanner:
         Returns:
             tuple: (int: pan angle, int: tilt angle, int: sensor reading)
         '''
-        self.dev.write("READSENSOR")    # send the instruction
+        self.dev.write('READSENSOR')    # send the instruction
         self._ready = False
         received = self._read_until_ready()
         # format the received data according to the expected form shown in the method docstring
