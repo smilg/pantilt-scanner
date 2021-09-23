@@ -7,6 +7,7 @@ class Scanner:
         self.max_angle = max_angle
         self.pan_angle = None
         self.tilt_angle = None
+        print('syncing with scanner...')
         self.center()
 
     @property
