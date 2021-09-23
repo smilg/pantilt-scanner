@@ -6,6 +6,7 @@
 
 #define SERVO_CENTER 85
 #define SENSOR_SAMPLES 3
+#define MSEC_PER_DEG 20
 
 Servo pan_servo;
 Servo tilt_servo; 
@@ -19,12 +20,11 @@ void setup() {
     Serial.begin(115200);
     pan_servo.attach(PAN_PIN);
     tilt_servo.attach(TILT_PIN);
-    pan_servo.write(SERVO_CENTER);
-    pan_deg = SERVO_CENTER;
-    delay(SERVO_CENTER*20);
-    tilt_servo.write(SERVO_CENTER);
+    move_servo(pan_servo, SERVO_CENTER, SERVO_CENTER*MSEC_PER_DEG);
+    move_servo(tilt_servo, SERVO_CENTER, SERVO_CENTER*MSEC_PER_DEG);
     tilt_deg = SERVO_CENTER;
-    delay(SERVO_CENTER*20);
+    pan_deg = SERVO_CENTER;
+    Serial.println("ready");
 }
 
 void loop() {
@@ -51,13 +51,13 @@ void parse_command() {
         String arg = command.substring(4);
         arg.trim();
         int new_deg = arg.toInt();
-        move_servo(pan_servo, new_deg, abs(pan_deg-new_deg)*20);
+        move_servo(pan_servo, new_deg, abs(pan_deg-new_deg)*MSEC_PER_DEG);
         pan_deg = new_deg;
     } else if (command.startsWith("TILT|")) {
         String arg = command.substring(5);
         arg.trim();
         int new_deg = arg.toInt();
-        move_servo(tilt_servo, new_deg, abs(tilt_deg-new_deg)*20);
+        move_servo(tilt_servo, new_deg, abs(tilt_deg-new_deg)*MSEC_PER_DEG);
         tilt_deg = new_deg;
     } else {
         Serial.println("unknown command!");
