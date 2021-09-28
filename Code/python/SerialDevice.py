@@ -1,3 +1,4 @@
+from helpers import yesno_confirm
 import serial
 import serial.tools.list_ports as list_ports
 from serial.tools.list_ports_common import ListPortInfo
@@ -125,15 +126,6 @@ def print_port_info(port: ListPortInfo) -> None:
     print('\tdevice: {}'.format(port.device))
     print('\tdescription: {}'.format(port.description))
     print('\thwid: {}'.format(port.hwid))
-
-
-def yesno_confirm(message) -> bool:
-    confirm_choice = ''
-    while confirm_choice not in ('y', 'n'):
-        confirm_choice = input("{} (y/n) ".format(message)).lower().strip()
-        if confirm_choice not in ('y', 'n'):
-            print('please enter "y" or "n"')
-    return confirm_choice == 'y'
 
 
 if __name__ == '__main__':
