@@ -1,4 +1,5 @@
 from SerialDevice import SerialDevice
+import helpers
 
 class Scanner:
     def __init__(self, max_angle=170) -> None:
@@ -8,7 +9,7 @@ class Scanner:
         self.pan_angle = None
         self.tilt_angle = None
         print('syncing with scanner...')
-        self.center()
+        self.zero()
 
     @property
     def ready(self) -> bool:
@@ -87,14 +88,25 @@ class Scanner:
         Z445
 
         Returns:
-            tuple: (int: pan angle, int: tilt angle, int: sensor reading)
+            tuple: (float: pan angle, float: tilt angle, float: sensor reading)
         '''
         self.dev.write('READSENSOR')    # send the instruction
         self._ready = False
         received = self._read_until_ready()
         # format the received data according to the expected form shown in the method docstring
-        cleaned_data = [data.strip() for data in received if data.strip()[0] in ('X', 'Y', 'Z')]
-        return tuple(val for val in cleaned_data)
+        cleaned_data = [int(data.strip()[1:]) for data in received if data.strip()[0] in ('X', 'Y', 'Z')]
+        cleaned_data[2] = helpers.map(cleaned_data[2], 0, 1023, 0, 5)
+        return tuple(float(val) for val in cleaned_data)
+
+    def zero(self) -> None:
+        '''
+        Instructs the scanner to move to its zero point, then checks the input buffer until it is empty and the
+        scanner is ready for instruction.
+        '''
+        self.pan_angle = 0
+        self.tilt_angle = 0
+        self.pan(self.pan_angle)
+        self.tilt(self.tilt_angle)
 
     def center(self) -> None:
         '''
@@ -105,4 +117,3 @@ class Scanner:
         self.tilt_angle = self.max_angle/2
         self.pan(self.pan_angle)
         self.tilt(self.tilt_angle)
-        self._read_until_ready()
