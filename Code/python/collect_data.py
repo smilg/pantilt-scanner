@@ -9,8 +9,8 @@ pan_interval = 1
 tilt_interval = 1
 pan_center = 90
 tilt_center = 82
-pan_radius = 20
-tilt_radius = 25
+pan_radius = 24
+tilt_radius = 35
 
 def scan(s):
     xs, ys, ds = [], [], []
@@ -25,7 +25,6 @@ def scan(s):
             ys.append(dist[1])
             ds.append(dist[2])
     
-    threshold = mean(ds)
     return pd.DataFrame({'pan': xs, 'tilt': ys, 'voltage': ds})
 
 def main():
