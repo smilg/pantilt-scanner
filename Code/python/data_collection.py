@@ -1,3 +1,5 @@
+# this is most likely no longer useful, but i don't want to get rid of it yet
+
 import matplotlib.pyplot as plt
 import math
 import serial
