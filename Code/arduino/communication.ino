@@ -5,7 +5,7 @@
 #define SENSOR_PIN A0
 
 #define SERVO_CENTER 85
-#define SENSOR_SAMPLES 3
+#define SENSOR_SAMPLES 10
 #define MSEC_PER_DEG 20
 
 Servo pan_servo;
