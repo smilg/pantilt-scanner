@@ -54,7 +54,7 @@ def main():
 def plot_front_view(data):
     plt.scatter(-1*data.y, data.z)
     plt.axis('equal')
-    plt.title('Scanner output in 2D')
+    # plt.title('Scanner output in 2D')
     plt.xlabel('Y (cm)')
     plt.ylabel('Z (cm)')
     plt.show()
@@ -62,7 +62,7 @@ def plot_front_view(data):
 def plot_top_view(data):
     plt.scatter(data.y, data.x)
     plt.axis('equal')
-    plt.title('Scanner output in 2D')
+    # plt.title('Scanner output in 2D')
     plt.xlabel('y (cm)')
     plt.ylabel('x (cm)')
     plt.show()
@@ -79,7 +79,7 @@ def plot3d(data):
     for xb, yb, zb in zip(Xb, Yb, Zb):
         ax.plot([xb], [yb], [zb], 'w')
 
-    ax.set_title('Scanner output while scanning O')
+    # ax.set_title('Scanner output while scanning O')
     ax.set_xlabel('X (cm)')
     ax.set_ylabel('Y (cm)')
     ax.set_zlabel('Z (cm)')
