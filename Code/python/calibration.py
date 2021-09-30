@@ -42,11 +42,14 @@ def collect_data():
 
 def plot_data():
     data = helpers.load_csv()
-    data.plot('Distance', 'Voltage')
+    data.plot('Distance', 'Voltage', color='red')
     fit_dist = np.linspace(20, 150, 100)
     params = helpers.fit_data(data, 'Distance', 'Voltage')
     fit_volt = helpers.exp_function(fit_dist, *params)
-    plt.plot(fit_dist, fit_volt)
+    plt.plot(fit_dist, fit_volt, linestyle='dotted', color='blue')
+    plt.legend(['Calibration Data', 'Fitted Curve'])
+    plt.xlabel('Distance (cm)')
+    plt.ylabel('Voltage (V)')
     plt.show()
 
 
