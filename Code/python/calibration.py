@@ -61,11 +61,13 @@ def verify_calibration():
     predicted_dists = helpers.exp_function(test_data['Voltage'], *fit_params)
     print(predicted_dists)
     actual_dists = test_data['Distance']
-    error = (np.abs(actual_dists-predicted_dists)/predicted_dists)*100
+    # error = (np.abs(actual_dists-predicted_dists)/predicted_dists)*100
+    error = actual_dists-predicted_dists
 
     plt.plot(actual_dists, error)
     plt.xlabel('Actual Distance (cm)')
-    plt.ylabel('Percent error')
+    plt.ylabel('Actual Distance-Predicted Distance (cm)')
+    plt.title('Scanner error post-calibration')
     plt.show()
 
 
