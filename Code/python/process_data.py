@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+PAN_CENTER = 90
+TILT_CENTER = 82
 
 def main():
     print('choose calibration data:')
@@ -13,7 +15,7 @@ def main():
     fit_params = helpers.fit_data(calib_data, 'Voltage', 'Distance')
     # convert voltages from scan data to distances in cm
     dists = helpers.exp_function(scan_data['voltage'], *fit_params)
-    xs, ys, zs = helpers.sph2cart(np.deg2rad(90-scan_data['pan']), np.deg2rad(scan_data['tilt']-82), dists)
+    xs, ys, zs = helpers.sph2cart(np.deg2rad(PAN_CENTER-scan_data['pan']), np.deg2rad(scan_data['tilt']-TILT_CENTER), dists)
     ys *= -1
     transformed_data = pd.DataFrame({'x':xs, 'y':ys, 'z':zs}, index=None)
     done = False
@@ -41,8 +43,8 @@ def main():
             elif mode == 2:
                 plot3d(transformed_data)
             elif mode == 3:
-                single_line = scan_data[scan_data.tilt == 82]
-                xs, ys, zs = helpers.sph2cart(np.deg2rad(90-single_line['pan']), np.deg2rad(single_line['tilt']-82), dists)
+                single_line = scan_data[scan_data.tilt == TILT_CENTER]
+                xs, ys, zs = helpers.sph2cart(np.deg2rad(PAN_CENTER-single_line['pan']), np.deg2rad(single_line['tilt']-TILT_CENTER), dists)
                 single_line_transformed = pd.DataFrame({'x':xs, 'y':ys, 'z':zs}, index=None)
                 single_line_transformed = single_line_transformed[single_line_transformed.x > min_dist]
                 single_line_transformed = single_line_transformed[single_line_transformed.x < max_dist]
