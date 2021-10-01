@@ -63,7 +63,8 @@ def main():
                 xs, ys, zs = helpers.sph2cart(
                         np.deg2rad(PAN_CENTER-single_line['pan']),
                         np.deg2rad(single_line['tilt']-TILT_CENTER), dists)
-                single_line_transformed = pd.DataFrame({'x':xs, 'y':ys, 'z':zs}, index=None)
+                single_line_transformed = pd.DataFrame({'x':xs, 'y':ys, 'z':zs},
+                                    index=None)
                 single_line_transformed = single_line_transformed[
                                     single_line_transformed.x > min_dist]
                 single_line_transformed = single_line_transformed[
