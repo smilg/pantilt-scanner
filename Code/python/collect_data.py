@@ -16,9 +16,11 @@ def scan(s):
     xs, ys, ds = [], [], []
     print('starting scan')
     s.delay(1000)
-    for pan_pos in trange(pan_center-pan_radius, pan_center+pan_radius, pan_interval, desc="pan progress"):
+    for pan_pos in trange(pan_center-pan_radius, pan_center+pan_radius,
+                                pan_interval, desc="pan progress"):
         s.pan(pan_pos)
-        for tilt_pos in trange(tilt_center-tilt_radius, tilt_center+tilt_radius, tilt_interval, desc="tilt progress", leave=False):
+        for tilt_pos in trange(tilt_center-tilt_radius, tilt_center+tilt_radius,
+                            tilt_interval, desc="tilt progress", leave=False):
             s.tilt(tilt_pos)
             dist = s.read_sensor()
             xs.append(dist[0])

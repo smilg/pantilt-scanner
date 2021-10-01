@@ -72,7 +72,8 @@ def save_csv(data):
         if not data_dir.parent.is_dir():
             print('invalid path! make sure the directory exists and is accessible.')
         elif data_dir.is_file():
-            if yesno_confirm('a file already exists at that location. would you like to replace it?'):
+            if yesno_confirm('a file already exists at that location. would you '+\
+                                'like to replace it?'):
                 data.to_csv(data_dir, index=False)
                 break
         else:

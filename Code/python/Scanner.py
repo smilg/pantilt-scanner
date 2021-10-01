@@ -18,8 +18,8 @@ class Scanner:
     
     def _read_until_ready(self) -> list:
         '''
-        Reads data from the scanner until it is ready for a new instruction. Any data read is
-        returned as a list of lines.
+        Reads data from the scanner until it is ready for a new instruction.
+        Any data read is returned as a list of lines.
 
         Returns:
             list: the lines of data received before 'ready'
@@ -27,7 +27,8 @@ class Scanner:
         data = []
         # loop if not ready or data waiting in input buffer
         while not self._ready or self.dev.ser.in_waiting:
-            # read data from the input buffer, add it to the list if it isn't 'ready'
+            # read data from the input buffer, add it to the list if it
+            # isn't 'ready'
             line = self.dev.read()
             if line.strip() == 'ready':
                 self._ready = True
@@ -38,9 +39,11 @@ class Scanner:
 
     def delay(self, time: int) -> None:
         '''
-        Instructs the scanner to wait for a specific amount of time, then waits for a ready signal.
+        Instructs the scanner to wait for a specific amount of time,
+        then waits for a ready signal.
         
-        Intended to be used to mitigate the scanner shaking and messing up the readings.
+        Intended to be used to mitigate the scanner shaking and
+        messing up the readings.
 
         Args:
             time (int): The amount of time to wait in milliseconds.
@@ -79,11 +82,12 @@ class Scanner:
 
     def read_sensor(self) -> tuple:
         '''
-        Instructs the scanner to send a sensor reading then waits for the reading and a ready signal. The data is then
-        cleaned and returned as a tuple.
+        Instructs the scanner to send a sensor reading then waits for the
+        reading and a ready signal. The data is then cleaned and returned as a tuple.
 
-        This function assumes the data is sent as 3 separate lines consisting of the axis and coordinate. For example,
-        a sensor reading of 445 at pan angle 10 tilt angle 35 should be sent as:
+        This function assumes the data is sent as 3 separate lines consisting of
+        the axis and coordinate. For example, a sensor reading of 445 at
+        pan angle 10 tilt angle 35 should be sent as:
         X10
         Y35
         Z445
@@ -94,15 +98,17 @@ class Scanner:
         self.dev.write('READSENSOR')    # send the instruction
         self._ready = False
         received = self._read_until_ready()
-        # format the received data according to the expected form shown in the method docstring
-        cleaned_data = [int(data.strip()[1:]) for data in received if data.strip()[0] in ('X', 'Y', 'Z')]
+        # format the received data according to the expected form shown in
+        # the method docstring
+        cleaned_data = [int(data.strip()[1:]) for data in received if \
+            data.strip()[0] in ('X', 'Y', 'Z')]
         cleaned_data[2] = helpers.map(cleaned_data[2], 0, 1023, 0, 5)
         return tuple(float(val) for val in cleaned_data)
 
     def zero(self) -> None:
         '''
-        Instructs the scanner to move to its zero point, then checks the input buffer until it is empty and the
-        scanner is ready for instruction.
+        Instructs the scanner to move to its zero point, then checks the
+        input buffer until it is empty and the scanner is ready for instruction.
         '''
         self.pan_angle = 0
         self.tilt_angle = 0
@@ -111,8 +117,8 @@ class Scanner:
 
     def center(self) -> None:
         '''
-        Instructs the scanner to move to its center point, then checks the input buffer until it is empty and the
-        scanner is ready for instruction.
+        Instructs the scanner to move to its center point, then checks the
+        input buffer until it is empty and the scanner is ready for instruction.
         '''
         self.pan_angle = self.max_angle/2
         self.tilt_angle = self.max_angle/2

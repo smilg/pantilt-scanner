@@ -47,8 +47,8 @@ class SerialDevice:
 
     def autodetect_ports(self) -> list:
         '''
-        check if any of the visible COM ports have matching Arduino (or clone) HIDS, and
-        return a list of the ones that do.
+        check if any of the visible COM ports have matching Arduino
+        (or clone) HIDS, and return a list of the ones that do.
 
         Returns:
             list: a list of ListPortInfo objects that match Arduino HIDS
@@ -100,14 +100,16 @@ class SerialDevice:
                 self.connected = True
                 print('opened port {}'.format(port.name))
             except:
-                print('can\'t connect to port {}! is the port already in use?'.format(self.port.device))
+                print(('can\'t connect to port {}! is '+\
+                    'the port already in use?').format(self.port.device))
                 pass
         else:
             print('not connecting to port {}.'.format(port.name))
 
     def confirm_baud(self, baud: int) -> int:
         '''
-        ask the user if they want to change the baud rate, and change it to what they want.
+        ask the user if they want to change the baud rate,
+        and change it to what they want.
 
         Args:
             baud (int): the currently selected baud rate.
@@ -126,16 +128,20 @@ class SerialDevice:
                 else:
                     baud_choice = int(baud_choice)
                     if baud_choice in SerialDevice.EXTENDED_BAUDS:
-                        print('baud rate {} is not standard, but may still be supported on some machines.'.format(baud_choice))
-                        if yesno_confirm('are you sure you want to select baud rate {}?'.format(baud_choice)):
+                        print(('baud rate {} is not standard, but may still '+\
+                                'be supported on some machines.').format(baud_choice))
+                        if yesno_confirm(('are you sure you want to select '+\
+                                'baud rate {}?').format(baud_choice)):
                             print('using baud rate {}.'.format(baud_choice))
                             return int(baud_choice)
                     elif baud_choice in SerialDevice.STANDARD_BAUDS:
                         print('using baud rate {}.'.format(baud_choice))
                         return int(baud_choice)
                     else:
-                        print('baud rate {} is not standard, and is likely not supported.'.format(baud_choice))
-                        if yesno_confirm('are you sure you want to select baud rate {}?'.format(baud_choice)):
+                        print(('baud rate {} is not standard, and is likely '+\
+                                'not supported.').format(baud_choice))
+                        if yesno_confirm(('are you sure you want to select '+\
+                                'baud rate {}?').format(baud_choice)):
                             print('using baud rate {}.'.format(baud_choice))
                             return int(baud_choice)
         else:

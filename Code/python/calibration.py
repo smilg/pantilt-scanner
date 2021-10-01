@@ -24,9 +24,11 @@ def collect_data():
         elif dist.isnumeric():
             dist = int(dist)
             if dist < 20:
-                print('the sensor is unreliable at distances below 20 cm, place it further away.')
+                print('the sensor is unreliable at distances below 20 cm,'+\
+                        ' place it further away.')
             elif dist > 150:
-                print('the sensor is unreliable at distances greater than 150 cm, place it closer.')
+                print('the sensor is unreliable at distances greater than '+\
+                        '150 cm, place it closer.')
             else:
                 dists.append(dist)
                 v = s.read_sensor()[2]
@@ -56,7 +58,8 @@ def plot_data():
 def verify_calibration():
     print('select a calibration dataset')
     calib_data = helpers.load_csv()
-    print('select a dataset to compare to the calibration dataset (generate using calibrate function)')
+    print('select a dataset to compare to the calibration dataset '+\
+            '(generate using calibrate function)')
     test_data = helpers.load_csv()
     # fit calibration data to exponential function
     fit_params = helpers.fit_data(calib_data, 'Voltage', 'Distance')

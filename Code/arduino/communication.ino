@@ -6,8 +6,8 @@
 
 #define SERVO_CENTER 85
 #define SENSOR_SAMPLES 10
-#define MSEC_PER_DEG 20     // the servo is rated for 17 ms/deg unloaded, 20 seems ok when testing
-                            // with stuff mounted on it
+#define MSEC_PER_DEG 20     // the servo is rated for 17 ms/deg unloaded, 20 seems ok
+                            //  when testing with stuff mounted on it
 
 // initialize servo objects globally so they can be passed around easily
 Servo pan_servo;
@@ -32,7 +32,8 @@ void loop() {
     // constantly read serial input buffer
     if (Serial.available()) {
         char ch = Serial.read();
-        // carriage return means a command has finished sending, so parse it and reset the string
+        // carriage return means a command has finished sending, so parse it and
+        // reset the string
         if (ch == '\r') {
             parse_command();
             command = "";
@@ -70,7 +71,8 @@ void parse_command() {
         // pan to the location
         move_servo(tilt_servo, new_deg, abs(tilt_deg-new_deg)*MSEC_PER_DEG);
         tilt_deg = new_deg;
-    } else if (command.startsWith("DELAY|")) {  // this one is mostly for debugging purposes
+    } else if (command.startsWith("DELAY|")) {  // this one is mostly for
+                                                // debugging purposes
         // extract the amount of delay from the command
         String arg = command.substring(6);
         arg.trim();
@@ -78,13 +80,14 @@ void parse_command() {
     } else {    // communicate if a bad command is received
         Serial.println("unknown command!");
     }
-    // send ready when finished so the controller knows when it can send another instruction
+    // send ready when finished so the controller knows when it
+    // can send another instruction
     Serial.println("ready");
 }
 
 void move_servo(Servo serv, long angle, int wait) {
-// move a servo to a specific angle, then wait for some amount of time in msec (to allow the
-//      servo to finish moving)
+// move a servo to a specific angle, then wait for some amount of time in
+//  msec (to allow the servo to finish moving)
     serv.write(angle);
     delay(wait);
 }

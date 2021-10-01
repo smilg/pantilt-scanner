@@ -15,17 +15,24 @@ def main():
     fit_params = helpers.fit_data(calib_data, 'Voltage', 'Distance')
     # convert voltages from scan data to distances in cm
     dists = helpers.exp_function(scan_data['voltage'], *fit_params)
-    # transform the data to cartesian coordinates after translating (rotating?) the center angle to be 0, 0
-    xs, ys, zs = helpers.sph2cart(np.deg2rad(PAN_CENTER-scan_data['pan']), np.deg2rad(scan_data['tilt']-TILT_CENTER), dists)
-    # flip the y axis, not really sure why this is necessary but the scan is backwards if this isn't done
+    # transform the data to cartesian coordinates after translating
+    # (rotating?) the center angle to be 0, 0
+    xs, ys, zs = helpers.sph2cart(
+        np.deg2rad(PAN_CENTER-scan_data['pan']), 
+        np.deg2rad(scan_data['tilt']-TILT_CENTER), dists)
+    # flip the y axis, not really sure why this is necessary but the
+    # scan is backwards if this isn't done
     ys *= -1
-    transformed_data = pd.DataFrame({'x':xs, 'y':ys, 'z':zs}, index=None) # throw it in a dataframe so it's easier to use 
+    # throw it in a dataframe so it's easier to use
+    transformed_data = pd.DataFrame({'x':xs, 'y':ys, 'z':zs}, index=None) 
     
     # plot generation menu
     done = False
     while not done:
-        min_dist = float(input('enter the minimum distance in cm to include in the plot: '))
-        max_dist = float(input('enter the maximum distance in cm to include in the plot: '))
+        min_dist = float(input('enter the minimum distance in cm '+\
+                                'to include in the plot: '))
+        max_dist = float(input('enter the maximum distance in cm '+\
+                                'to include in the plot: '))
         # get rid of points not in the specified range
         transformed_data = transformed_data[transformed_data.x > min_dist]
         transformed_data = transformed_data[transformed_data.x < max_dist]
@@ -48,14 +55,19 @@ def main():
             elif mode == 2:
                 plot3d(transformed_data)
             elif mode == 3:
-                # top down view is funky since we're getting it from the 3d scan data
-                # take only the center angle data from the scan, then filter based on the input min and max,
-                # then send it to the plotting function
+                # top down view is funky since we're getting it from the
+                # 3d scan data take only the center angle data from the
+                # scan, then filter based on the input min and max, then
+                # send it to the plotting function
                 single_line = scan_data[scan_data.tilt == TILT_CENTER]
-                xs, ys, zs = helpers.sph2cart(np.deg2rad(PAN_CENTER-single_line['pan']), np.deg2rad(single_line['tilt']-TILT_CENTER), dists)
+                xs, ys, zs = helpers.sph2cart(
+                        np.deg2rad(PAN_CENTER-single_line['pan']),
+                        np.deg2rad(single_line['tilt']-TILT_CENTER), dists)
                 single_line_transformed = pd.DataFrame({'x':xs, 'y':ys, 'z':zs}, index=None)
-                single_line_transformed = single_line_transformed[single_line_transformed.x > min_dist]
-                single_line_transformed = single_line_transformed[single_line_transformed.x < max_dist]
+                single_line_transformed = single_line_transformed[
+                                    single_line_transformed.x > min_dist]
+                single_line_transformed = single_line_transformed[
+                                    single_line_transformed.x < max_dist]
                 plot_top_view(single_line_transformed)
                 # plot3d(single_line_transformed)
 
@@ -78,13 +90,18 @@ def plot_top_view(data):
 
 def plot3d(data):
     ax = plt.axes(projection='3d')
-    ax.scatter(data.x, data.y, data.z, marker='.', cmap='plasma')   # colormap doesn't work like this, idk i hate matplotlib
+    # colormap doesn't work like this, idk i hate matplotlib
+    ax.scatter(data.x, data.y, data.z, marker='.', cmap='plasma')
     # Create cubic bounding box to simulate equal aspect ratio
     # from https://stackoverflow.com/a/13701747
-    max_range = np.array([data.x.max()-data.x.min(), data.y.max()-data.y.min(), data.z.max()-data.z.min()]).max()
-    Xb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][0].flatten() + 0.5*(data.x.max()+data.x.min())
-    Yb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][1].flatten() + 0.5*(data.y.max()+data.y.min())
-    Zb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][2].flatten() + 0.5*(data.z.max()+data.z.min())
+    max_range = np.array([data.x.max()-data.x.min(),
+        data.y.max()-data.y.min(), data.z.max()-data.z.min()]).max()
+    Xb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][0].flatten()\
+            + 0.5*(data.x.max()+data.x.min())
+    Yb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][1].flatten()\
+            + 0.5*(data.y.max()+data.y.min())
+    Zb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][2].flatten()\
+            + 0.5*(data.z.max()+data.z.min())
     for xb, yb, zb in zip(Xb, Yb, Zb):
         ax.plot([xb], [yb], [zb], 'w')
 
