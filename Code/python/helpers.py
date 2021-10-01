@@ -1,4 +1,3 @@
-import math
 from scipy.optimize import curve_fit
 from pathlib import Path
 import numpy as np
