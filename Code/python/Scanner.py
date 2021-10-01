@@ -9,6 +9,7 @@ class Scanner:
         self.pan_angle = None
         self.tilt_angle = None
         print('syncing with scanner...')
+        # zero the scanner on connection so it knows where it's pointing
         self.zero()
 
     @property

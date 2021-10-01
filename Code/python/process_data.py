@@ -15,13 +15,18 @@ def main():
     fit_params = helpers.fit_data(calib_data, 'Voltage', 'Distance')
     # convert voltages from scan data to distances in cm
     dists = helpers.exp_function(scan_data['voltage'], *fit_params)
+    # transform the data to cartesian coordinates after translating (rotating?) the center angle to be 0, 0
     xs, ys, zs = helpers.sph2cart(np.deg2rad(PAN_CENTER-scan_data['pan']), np.deg2rad(scan_data['tilt']-TILT_CENTER), dists)
+    # flip the y axis, not really sure why this is necessary but the scan is backwards if this isn't done
     ys *= -1
-    transformed_data = pd.DataFrame({'x':xs, 'y':ys, 'z':zs}, index=None)
+    transformed_data = pd.DataFrame({'x':xs, 'y':ys, 'z':zs}, index=None) # throw it in a dataframe so it's easier to use 
+    
+    # plot generation menu
     done = False
     while not done:
         min_dist = float(input('enter the minimum distance in cm to include in the plot: '))
         max_dist = float(input('enter the maximum distance in cm to include in the plot: '))
+        # get rid of points not in the specified range
         transformed_data = transformed_data[transformed_data.x > min_dist]
         transformed_data = transformed_data[transformed_data.x < max_dist]
         print('plot types:')
@@ -43,6 +48,9 @@ def main():
             elif mode == 2:
                 plot3d(transformed_data)
             elif mode == 3:
+                # top down view is funky since we're getting it from the 3d scan data
+                # take only the center angle data from the scan, then filter based on the input min and max,
+                # then send it to the plotting function
                 single_line = scan_data[scan_data.tilt == TILT_CENTER]
                 xs, ys, zs = helpers.sph2cart(np.deg2rad(PAN_CENTER-single_line['pan']), np.deg2rad(single_line['tilt']-TILT_CENTER), dists)
                 single_line_transformed = pd.DataFrame({'x':xs, 'y':ys, 'z':zs}, index=None)
@@ -52,6 +60,7 @@ def main():
                 # plot3d(single_line_transformed)
 
 def plot_front_view(data):
+    # the 2d front view isn't backwards, so flip the y axis again
     plt.scatter(-1*data.y, data.z)
     plt.axis('equal')
     # plt.title('Scanner output in 2D')
@@ -69,7 +78,7 @@ def plot_top_view(data):
 
 def plot3d(data):
     ax = plt.axes(projection='3d')
-    ax.scatter(data.x, data.y, data.z, marker='.', cmap='plasma')
+    ax.scatter(data.x, data.y, data.z, marker='.', cmap='plasma')   # colormap doesn't work like this, idk i hate matplotlib
     # Create cubic bounding box to simulate equal aspect ratio
     # from https://stackoverflow.com/a/13701747
     max_range = np.array([data.x.max()-data.x.min(), data.y.max()-data.y.min(), data.z.max()-data.z.min()]).max()

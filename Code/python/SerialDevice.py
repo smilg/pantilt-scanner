@@ -40,9 +40,19 @@ class SerialDevice:
             self.connect(port)
     
     def __del__(self) -> None:
+        '''
+        close the serial connection when the object is deleted
+        '''
         self.ser.close()
 
     def autodetect_ports(self) -> list:
+        '''
+        check if any of the visible COM ports have matching Arduino (or clone) HIDS, and
+        return a list of the ones that do.
+
+        Returns:
+            list: a list of ListPortInfo objects that match Arduino HIDS
+        '''
         ports = list_ports.comports()
         arduino_ports = []
         for port in ports:
@@ -51,6 +61,12 @@ class SerialDevice:
         return arduino_ports
 
     def manual_select_port(self) -> ListPortInfo:
+        '''
+        have the user manually select a serial port to connect to
+
+        Returns:
+            ListPortInfo: the serial port chosen by the user.
+        '''
         ports = list_ports.comports()
         port_list = [port for port in ports]
         print('found ports:')
@@ -69,6 +85,12 @@ class SerialDevice:
                 return port_list[int(selection)]
 
     def connect(self, port: ListPortInfo) -> None:
+        '''
+        confirm connection to a serial port, and connect (or don't).
+
+        Args:
+            port (ListPortInfo): the port to possibly be connected to.
+        '''
         if yesno_confirm('connect with baud rate {}?'.format(self.baud)):
             self.port = port
             try:
@@ -84,6 +106,15 @@ class SerialDevice:
             print('not connecting to port {}.'.format(port.name))
 
     def confirm_baud(self, baud: int) -> int:
+        '''
+        ask the user if they want to change the baud rate, and change it to what they want.
+
+        Args:
+            baud (int): the currently selected baud rate.
+
+        Returns:
+            int: the user's choice of baud rate.
+        '''
         print('the currently selected baud rate is {}.'.format(baud))
         
         if yesno_confirm('would you like to change it?'):
@@ -111,17 +142,35 @@ class SerialDevice:
             return baud
 
     def read(self) -> str:
+        '''
+        read the serial input buffer
+
+        Returns:
+            str: the contents of the serial input buffer
+        '''
         line = ''
         if self.connected:
             line = self.ser.readline().decode()
         return line
 
-    def write(self, string) -> None:
+    def write(self, string: str) -> None:
+        '''
+        send something over the serial port.
+
+        Args:
+            string (str): data to send over the serial port.
+        '''
         if self.connected:
             self.ser.write('{}\r'.format(string).encode())
 
 
 def print_port_info(port: ListPortInfo) -> None:
+    '''
+    list information about a specific serial port.
+
+    Args:
+        port (ListPortInfo): the serial port to print info about.
+    '''
     print('\tname: {}'.format(port.name))
     print('\tdevice: {}'.format(port.device))
     print('\tdescription: {}'.format(port.description))
@@ -129,6 +178,7 @@ def print_port_info(port: ListPortInfo) -> None:
 
 
 if __name__ == '__main__':
+    # debug stuff, used to monitor the port when testing
     dev = SerialDevice()
     while True:
         line = dev.read()

@@ -7,10 +7,10 @@ from tqdm.auto import trange
 
 pan_interval = 1
 tilt_interval = 1
-pan_center = 90
-tilt_center = 82
-pan_radius = 24
-tilt_radius = 35
+pan_center = 90     # determined experimentally
+tilt_center = 82    # determined experimentally
+pan_radius = 24     # set based on how wide the thing being scanned is
+tilt_radius = 35    # set based on how tall the thing being scanned is 
 
 def scan(s):
     xs, ys, ds = [], [], []
